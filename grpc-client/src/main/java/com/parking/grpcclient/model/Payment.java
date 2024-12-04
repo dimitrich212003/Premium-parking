@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Payment {
-    private UUID booking;
+    private String booking;
     private double amount;
     private String paymentDate;
     private String status;
@@ -13,7 +13,7 @@ public class Payment {
 
     }
 
-    public UUID getBooking() {
+    public String getBooking() {
         return booking;
     }
 
@@ -29,7 +29,7 @@ public class Payment {
         return status;
     }
 
-    public void setBooking(UUID booking) {
+    public void setBooking(String booking) {
         this.booking = booking;
     }
 

@@ -1,0 +1,24 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: grpc-client
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    template:
+      exchange: parkingExchange
+      routing-key: payment.key
+    queues:
+      payment: paymentQueue
+      paymentResult: paymentResultQueue
+
+grpc:
+  client:
+    paymentValidator:
+      address: localhost:9090 # ????? gRPC ???????
+      negotiation-type: plaintext # ?????????? TLS ??? ?????????? ??????????????

@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package com.premium.grpcclient;
+
+message Payment {
+  string booking = 1;
+  double amount = 2;
+  string paymentDate = 3;
+  string status = 4;
+}
+
+message ValidatePaymentRequest {
+  Payment payment = 1;
+}
+
+message ValidatePaymentResponse {
+  Payment payment = 1;
+}
+
+service PaymentValidator {
+  rpc validatePayment (ValidatePaymentRequest) returns (ValidatePaymentResponse);
+}

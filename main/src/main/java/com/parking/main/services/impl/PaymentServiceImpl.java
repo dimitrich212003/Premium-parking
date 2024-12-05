@@ -59,6 +59,16 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    public PaymentsDTO updatePayment(UUID id, PaymentsDTO paymentsDTO) {
+        Payment payment = paymentRepository.findById(id).orElseThrow(() -> new RuntimeException("Payment not found"));
+
+        payment.setStatus(paymentsDTO.getStatus());
+
+        Payment updatePayment = paymentRepository.saveAndFlush(payment);
+        return paymentMapper.toDTO(updatePayment);
+    }
+
+    @Override
     public void deletePayment(UUID id) {
         paymentRepository.deleteById(id);
     }

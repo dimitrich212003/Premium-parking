@@ -3,10 +3,11 @@ syntax = "proto3";
 package com.premium.grpcclient;
 
 message Payment {
-  string booking = 1;
-  double amount = 2;
-  string paymentDate = 3;
-  string status = 4;
+  string id = 1;
+  string booking = 2;
+  double amount = 3;
+  string paymentDate = 4;
+  string status = 5;
 }
 
 message ValidatePaymentRequest {

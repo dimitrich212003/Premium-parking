@@ -1,12 +1,15 @@
 package com.parking.main.services.DTO;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.parking.main.mappers.StringToUUIDDeserializer;
 import org.springframework.hateoas.RepresentationModel;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class PaymentsDTO extends RepresentationModel<PaymentsDTO> {
+    @JsonDeserialize(using = StringToUUIDDeserializer.class)
     private UUID id;
+    @JsonDeserialize(using = StringToUUIDDeserializer.class)
     private UUID booking;
     private double amount;
     private String paymentDate;
@@ -54,5 +57,11 @@ public class PaymentsDTO extends RepresentationModel<PaymentsDTO> {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "\nUUID платежа: " + getId() + "\nUUID аренды: " + getBooking() + "\nСтоимость аренды: " + getAmount() +
+                "\nДата аренды: " + getPaymentDate() + "\nСтатус аренды: " + getStatus();
     }
 }

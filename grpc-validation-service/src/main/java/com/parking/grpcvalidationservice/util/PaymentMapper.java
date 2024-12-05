@@ -2,7 +2,7 @@ package com.parking.grpcvalidationservice.util;
 
 
 import com.parking.grpcvalidationservice.model.Payment;
-import com.premium.grpcvalidationservice.PaymentCheck;
+import com.premium.grpcclient.PaymentCheck;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

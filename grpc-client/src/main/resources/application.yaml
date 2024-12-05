@@ -1,25 +1,13 @@
-#server:
-#  port: 8082
-#
-#spring:
-#  application:
-#    name: grpc-client
-#
-#  rabbitmq:
-#    host: localhost
-#    port: 5672
-#    username: guest
-#    password: guest
-#    template:
-#      exchange: parkingExchange
-#      routing-key: payment.key
-#    queues:
-#      payment: paymentQueue
-#      paymentResult: paymentResultQueue
+spring:
+  rabbitmq:
+    host: localhost
+    virtual-host: /
+    password: guest
+    username: guest
+    port: 5672
 
 grpc:
   client:
-    paymentValidator:
-      address: localhost:9090
-      negotiationType: plaintext
-
+    local-grpc-server:
+      address: "static://localhost:9090"
+      enable-keep-alive: true

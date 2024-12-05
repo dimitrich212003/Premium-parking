@@ -21,14 +21,13 @@ public class RabbitMQConfiguration {
 
     @Bean
     public Queue paymentQueue() {
-        return new Queue(paymentQueueName, true);
+        return new Queue(paymentQueueName, false, false, true);
     }
 
     @Bean
     public Queue paymentResultQueue() {
-        return new Queue(paymentResultQueueName, true);
+        return new Queue(paymentResultQueueName, false, false, true);
     }
-
 
     @Bean
     public Binding paymentBinding(Queue paymentQueue, Exchange exchange) {
@@ -50,9 +49,8 @@ public class RabbitMQConfiguration {
         return new Jackson2JsonMessageConverter();
     }
 
-//    @Bean
-//    public Jackson2JsonMessageConverter jackson2JsonMessageConverter(ObjectMapper objectMapper) {
-//        return new Jackson2JsonMessageConverter(objectMapper);
-//    }
-
+    @Bean
+    public Jackson2JsonMessageConverter jackson2JsonMessageConverter(ObjectMapper objectMapper) {
+        return new Jackson2JsonMessageConverter(objectMapper);
+    }
 }

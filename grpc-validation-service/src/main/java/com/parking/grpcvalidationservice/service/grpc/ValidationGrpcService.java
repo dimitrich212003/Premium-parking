@@ -3,19 +3,18 @@ package com.parking.grpcvalidationservice.service.grpc;
 import com.parking.grpcvalidationservice.model.Payment;
 import com.parking.grpcvalidationservice.service.ValidationService;
 import com.parking.grpcvalidationservice.util.PaymentMapper;
-import com.premium.grpcvalidationservice.PaymentCheck;
-import com.premium.grpcvalidationservice.PaymentValidatorGrpc;
+import com.premium.grpcclient.PaymentCheck;
+import com.premium.grpcclient.PaymentValidatorGrpc;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @GrpcService
+@Service
 public class ValidationGrpcService extends PaymentValidatorGrpc.PaymentValidatorImplBase {
     private final ValidationService validationService;
     private final PaymentMapper paymentMapper;
 
-    @Autowired
     public ValidationGrpcService(ValidationService validationService, PaymentMapper paymentMapper) {
         this.validationService = validationService;
         this.paymentMapper = paymentMapper;
@@ -36,6 +35,7 @@ public class ValidationGrpcService extends PaymentValidatorGrpc.PaymentValidator
         PaymentCheck.ValidatePaymentResponse response = PaymentCheck.ValidatePaymentResponse
                 .newBuilder()
                 .setPayment(PaymentCheck.Payment.newBuilder()
+                        .setId(payment.getId())
                         .setBooking(payment.getBooking())
                         .setAmount(payment.getAmount())
                         .setPaymentDate(payment.getPaymentDate())

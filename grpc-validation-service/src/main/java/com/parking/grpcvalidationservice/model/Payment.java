@@ -1,8 +1,8 @@
 package com.parking.grpcvalidationservice.model;
 
-import java.util.UUID;
 
 public class Payment {
+    private String id;
     private String booking;
     private double amount;
     private String paymentDate;
@@ -28,6 +28,10 @@ public class Payment {
         return status;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public void setBooking(String booking) {
         this.booking = booking;
     }
@@ -42,6 +46,10 @@ public class Payment {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override

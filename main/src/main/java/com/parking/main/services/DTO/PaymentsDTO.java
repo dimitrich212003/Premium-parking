@@ -64,4 +64,6 @@ public class PaymentsDTO extends RepresentationModel<PaymentsDTO> {
         return "\nUUID платежа: " + getId() + "\nUUID аренды: " + getBooking() + "\nСтоимость аренды: " + getAmount() +
                 "\nДата аренды: " + getPaymentDate() + "\nСтатус аренды: " + getStatus();
     }
+
+
 }

@@ -6,6 +6,9 @@ import com.parking.main.services.DTO.BookingsDTO;
 import org.example.controllers.BookingApi;
 import org.example.dtos.request.BookingsRequest;
 import org.example.dtos.response.BookingsResponse;
+import org.example.exeptions.ResourceNotFoundException;
+import org.example.exeptions.InvalidRequestException;
+import org.example.exeptions.BookingAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -13,7 +16,6 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +27,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 public class BookingsController implements BookingApi {
     private BookingService bookingService;
-
     private BookingsReMapper bookingsReMapper;
 
     @Autowired
@@ -35,11 +36,17 @@ public class BookingsController implements BookingApi {
     }
 
     @Override
-    public ResponseEntity<EntityModel<BookingsResponse>> createBooking(BookingsRequest bookingsRequest) {
+    public ResponseEntity<EntityModel<BookingsResponse>> createBooking(@RequestBody BookingsRequest bookingsRequest) {
+        if (bookingsRequest.user() == null || bookingsRequest.parkingSlot() == null) {
+            throw new InvalidRequestException("Пользователь и парковочное место обязательны для бронирования");
+        }
+
         BookingsDTO createBooking = bookingService.createBooking(bookingsReMapper.toDto(bookingsRequest));
+        if (bookingService.findBookingById(createBooking.getId()) != null) {
+            throw new BookingAlreadyExistsException("Бронирование для данного пользователя уже существует");
+        }
+
         BookingsResponse response = bookingsReMapper.toResponse(createBooking);
-
-
         EntityModel<BookingsResponse> bookingModel = EntityModel.of(response,
                 linkTo(methodOn(BookingsController.class).getBookingById(createBooking.getId())).withRel("bookingById"),
                 linkTo(methodOn(BookingsController.class).getBookingsByUserId(createBooking.getUser())).withRel("bookingsByUserId"),
@@ -49,21 +56,32 @@ public class BookingsController implements BookingApi {
     }
 
     @Override
-    public ResponseEntity<EntityModel<BookingsResponse>> updateBooking(UUID id, BookingsRequest bookingsRequest) {
-        BookingsDTO updateBooking = bookingService.updateBooking(id, bookingsReMapper.toDto(bookingsRequest));
-        BookingsResponse response = bookingsReMapper.toResponse(updateBooking);
+    public ResponseEntity<EntityModel<BookingsResponse>> updateBooking(@PathVariable UUID id, @RequestBody BookingsRequest bookingsRequest) {
+        if (bookingsRequest.user() == null || bookingsRequest.parkingSlot() == null) {
+            throw new InvalidRequestException("Пользователь и парковочное место обязательны для обновления бронирования");
+        }
 
+        BookingsDTO updateBooking = bookingService.updateBooking(id, bookingsReMapper.toDto(bookingsRequest));
+        if (bookingService.findBookingById(updateBooking.getId()) == null) {
+            throw new ResourceNotFoundException("Бронирование с ID " + id + " не найдено", id);
+        }
+
+        BookingsResponse response = bookingsReMapper.toResponse(updateBooking);
         EntityModel<BookingsResponse> bookingModel = EntityModel.of(response,
                 linkTo(methodOn(BookingsController.class).getBookingById(updateBooking.getId())).withRel("bookingById"),
                 linkTo(methodOn(BookingsController.class).getBookingsByUserId(updateBooking.getUser())).withRel("bookingsByUserId"),
-                linkTo(methodOn(BookingsController.class).deleteBooking(updateBooking.getId())).withRel("deleteBookingById"));
-
+                linkTo(methodOn(BookingsController.class).deleteBooking(updateBooking.getId())).withRel("deleteBookingById")
+        );
         return ResponseEntity.ok(bookingModel);
     }
 
     @Override
-    public ResponseEntity<Void> deleteBooking(UUID id) {
-        bookingService.deleteBooking(id);
+    public ResponseEntity<Void> deleteBooking(@PathVariable UUID id) {
+        try {
+            bookingService.deleteBooking(id);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Бронирование с ID " + id + " не найдено для удаления", id);
+        }
         return ResponseEntity.noContent().build();
     }
 
@@ -72,8 +90,8 @@ public class BookingsController implements BookingApi {
         List<BookingsDTO> bookings = bookingService.findAllByUserId(userId);
 
         List<BookingsResponse> responses = bookings.stream()
-                        .map(booking -> bookingsReMapper.toResponse(booking))
-                        .collect(Collectors.toList());
+                .map(bookingsReMapper::toResponse)
+                .collect(Collectors.toList());
 
         responses.forEach(response -> {
             response.add(linkTo(methodOn(BookingsController.class).getBookingById(response.getId())).withRel("bookingById"));
@@ -87,8 +105,11 @@ public class BookingsController implements BookingApi {
     @GetMapping("/api/booking/id/{id}")
     public ResponseEntity<EntityModel<BookingsResponse>> getBookingById(@PathVariable UUID id) {
         BookingsDTO booking = bookingService.findBookingById(id);
-        BookingsResponse response = bookingsReMapper.toResponse(booking);
+        if (booking == null) {
+            throw new ResourceNotFoundException("Бронирование с ID " + id + " не найдено", id);
+        }
 
+        BookingsResponse response = bookingsReMapper.toResponse(booking);
         EntityModel<BookingsResponse> bookingModel = EntityModel.of(response,
                 linkTo(methodOn(BookingsController.class).getBookingById(id)).withSelfRel(),
                 linkTo(methodOn(BookingsController.class).getBookingsByUserId(booking.getUser())).withRel("bookingByUserId"),

@@ -1,4 +1,4 @@
 package org.example.exeptions;
 
-public class StatusResponse {
-}
+public record StatusResponse(String status, String message) {}
+

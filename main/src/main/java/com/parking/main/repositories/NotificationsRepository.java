@@ -1,7 +1,7 @@
 package com.parking.main.repositories;
 
 import com.parking.main.models.Notifications;
-import com.parking.main.models.NotificationsType;
+import org.example.enumClass.NotificationsType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

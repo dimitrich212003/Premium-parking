@@ -1,6 +1,6 @@
 package com.parking.main.services.DTO;
 
-import com.parking.main.models.NotificationsType;
+import org.example.enumClass.NotificationsType;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.hateoas.RepresentationModel;

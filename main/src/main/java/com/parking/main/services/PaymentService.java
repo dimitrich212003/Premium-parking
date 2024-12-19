@@ -9,8 +9,6 @@ public interface PaymentService {
     List<PaymentsDTO> getAllPayments();
     PaymentsDTO getPaymentById(UUID id);
     PaymentsDTO createPayment(PaymentsDTO paymentsDTO);
-
     PaymentsDTO updatePayment(UUID id, PaymentsDTO paymentsDTO);
-
     void deletePayment(UUID id);
 }

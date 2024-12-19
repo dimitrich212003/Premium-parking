@@ -1,7 +1,7 @@
 package com.parking.main.services.impl;
 
 import com.parking.main.models.Notifications;
-import com.parking.main.models.NotificationsType;
+import org.example.enumClass.NotificationsType;
 import com.parking.main.repositories.NotificationsRepository;
 import com.parking.main.services.DTO.NotificationsDTO;
 import com.parking.main.services.NotificationsService;

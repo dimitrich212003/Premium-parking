@@ -1,6 +1,6 @@
 package com.parking.main.services;
 
-import com.parking.main.models.NotificationsType;
+import org.example.enumClass.NotificationsType;
 import com.parking.main.services.DTO.NotificationsDTO;
 
 import java.util.UUID;

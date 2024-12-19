@@ -3,6 +3,8 @@ package com.parking.main.models;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.example.enumClass.NotificationsType;
+
 
 import java.util.List;
 

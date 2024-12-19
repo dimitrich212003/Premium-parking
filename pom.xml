@@ -17,6 +17,8 @@
     <module>main</module>
     <module>grpc-client</module>
     <module>grpc-validation-service</module>
+    <module>common</module>
+    <module>parking-api</module>
   </modules>
 
   <repositories>

@@ -1,4 +1,4 @@
-package com.parking.main.models;
+package org.example.enumClass;
 
 public enum NotificationsType {
     BOOKING_CONFIRMED,
@@ -16,6 +16,4 @@ public enum NotificationsType {
         }
         throw new IllegalArgumentException("Invalid notification type: " + name);
     }
-
-
 }
